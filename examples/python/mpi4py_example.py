@@ -28,7 +28,7 @@ def proc_work():
         if status.tag == TAG_STOPWORK:
 
             MPI.COMM_WORLD.send(None, dest=RANK_WRITE, tag=TAG_STOPWORK)
-            print "".join(["WORKER ", str(rank), ": finished"])
+            print("".join(["WORKER ", str(rank), ": finished"]))
             return 0
 
         else:
@@ -63,7 +63,7 @@ def proc_write():
             nwrkrs_done += 1
             if nwrkrs_done == nwrkers:
 
-                print "WRITER: Finished"
+                print("WRITER: Finished")
                 return 0
         else:
 
@@ -74,7 +74,7 @@ def proc_coord():
     nsize = MPI.COMM_WORLD.Get_size()
     nwrkers = nsize - N_NON_WRKRS
 
-    print "COORD: Starting to send work."
+    print("COORD: Starting to send work.")
 
     cnt = 0
 
@@ -85,10 +85,10 @@ def proc_coord():
         else:
             dest = MPI.COMM_WORLD.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG)
 
-        MPI.COMM_WORLD.send(stn_id, dest=dest, tag=TAG_DOWORK)
+        MPI.COMM_WORLD.send(a_num, dest=dest, tag=TAG_DOWORK)
         cnt += 1
 
-    print "COORD: Done sending work."
+    print("COORD: Done sending work.")
 
     for w in np.arange(nwrkers):
         MPI.COMM_WORLD.send(None, dest=w + N_NON_WRKRS, tag=TAG_STOPWORK)
