@@ -6,6 +6,13 @@ This guide provides a practical overview of setting up and running parallel comp
 * [ICS-ACI Quick Reference Document](https://ics.psu.edu/wp-content/uploads/2015/07/ACI-Documentation_Reference-Sheet.pdf)
 * [ICS Training Videos](https://ics.psu.edu/what-we-do/education-and-training/ics-on-demand-videos/)
 
+The guide consists of three sections:
+
+* Overview of parallel computing and common parallel computing programming models
+* Overview of the standard software required to submit and execute parallel computing applications on HPC systems like ICS-ACI
+* Specific code examples for R and Python, including Portable Batch System (PBS) examples for submitting jobs
+
+
 # What is parallel computing?
 Parallel computing is the “simultaneous use of multiple compute resources to solve a computational problem” ([Barney 2017](https://computing.llnl.gov/tutorials/parallel_comp/#Whatis)). A workload is split into separate tasks, the tasks are executed concurrently on different computing resources, and then the results of the tasks are brought back together. There are many different parallel programming paradigms (see [Barney 2017](https://computing.llnl.gov/tutorials/parallel_comp/#Whatis) for a full review), but for practical purposes, it’s useful to think of two different models: (1) a shared memory multithreaded model; and (2) a distributed memory multiprocess model. This guide focuses on the latter, but we describe both models for context.
 
@@ -15,8 +22,13 @@ Under the shared memory multithreaded model, a parent process has offshoots of c
 ## Distributed memory multiprocess model
 In the distributed memory multiprocess model, each parallel line of execution is a true independent process with its own memory space. Because the processes do not share memory, they coordinate and exchange data via messages. Although the message passing can occur added latency and decreased performance relative to a multithreaded model, the overhead required to ensure thread-safe code is eliminated. Workload processes can exist on the same node or across nodes, but multiprocessing libraries often only support execution on a single node (e.g. [Python multiprocessing package](https://docs.python.org/3.6/library/multiprocessing.html)). In the next section, we will discuss the [Message Passing Interface (MPI)](https://computing.llnl.gov/tutorials/mpi), the industry standard for executing a distributed memory multiprocess model workload across nodes on a HPC system.   
 
-# Message Passing Interface (MPI)
+# Standard Software used on HPC Systems
+
+## Message Passing Interface (MPI)
 The [Message Passing Interface (MPI)](https://computing.llnl.gov/tutorials/mpi) is the industry standard for executing a distributed memory multiprocess model workload across nodes on a HPC system. MPI itself is not a software library, but an interface specification standard that defines what interface and features any MPI implementation must have. The two most popular MPI implementations are [Open MPI](https://www.open-mpi.org/) (not to be confused with [OpenMP](http://www.openmp.org/)) and [MPICH](https://www.mpich.org). Both are available on ICS-ACI. Although Open MPI and MPICH only provide native library interfaces for C and Fortran, MPI bindings are provided for Python by the [mpi4py](http://mpi4py.scipy.org/docs/) package and for R by the [Rmpi](https://cran.r-project.org/web/packages/Rmpi/index.html) package. It is important to note that while we focus on MPI within a distributed memory multiprocess model, it can also be used for [shared memory and hybrid shared-distributed memory parallel programming](https://software.intel.com/en-us/articles/an-introduction-to-mpi-3-shared-memory-programming).
 
-# Portable Batch System (PBS)  
+## Portable Batch System (PBS)  
 Because HPC systems like ICS-ACI serve many users, resource management software is required to effectively manage and utilize the computing resources. The [Portable Batch System (PBS)](https://en.wikipedia.org/wiki/Portable_Batch_System) is the most widely used HPC resource management software. ICS-ACI uses [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque), a version of PBS, in combination with the [Moab workload manager](http://www.adaptivecomputing.com/products/hpc-products/moab-hpc-basic-edition/) to manage and utilize the cluster's computing resources. For the purposes of this tutorial, we will refer to the TORQUE/MOAB software suite simply as "PBS". Users submit requests for computational resources to PBS via job scripts that specify the computing resources required (e.g. number of processes and nodes, memory, compute time, etc.) and the command for the parallel processing application to be executed. The user requests are placed on a queue and PBS automatically allocates resources for the different jobs. When resources become available for a particular job, PBS gives the job exclusive use of the compute resources requested and then executes the job.
+
+# Code Examples
+Add links to MPI-based R, Python and PBS code examples...
