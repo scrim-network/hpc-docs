@@ -4,9 +4,9 @@
 #PBS -l walltime=00:05:00
 #PBS -l pmem=1GB
 #PBS -j oe
-#PBS -o [FILEPATH OF LOG FILE]
+#PBS -o foreach_mpi_pbs.log
 #PBS -m abe
-#PBS -M [YOUR EMAIL ADDRESS]
+#PBS -M jwo118@psu.edu
 
 cd $PBS_O_WORKDIR
 

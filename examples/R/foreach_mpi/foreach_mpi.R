@@ -7,11 +7,11 @@ library(doParallel)
 library(foreach)
 
 # Set the output file paths for a log file and the RData results file.
-fpath_log <- "[FILE PATH TO LOG FILE]"
-fpath_out <- "[FILE PATH FOR RDATA FILE TO WRITE RESULTS]"
+fpath_log <- "foreach_mpi_R.log"
+fpath_out <- "foreach_mpi.RDATA"
 # Specify the number of processes to use. This should be one less than what is
 # requested in the accompanying PBS script because we need to count the main process.
-nprocs <- 19
+nprocs <- 39
 
 # Specify the underlying multiprocessing implementation. In this case, we are
 # using MPI. If running on a single computer, "PSOCK" can also be used.
@@ -29,7 +29,7 @@ a_func <- function(x, fpath_log) {
   log_file <-file(fpath_log, open='a')
   writeLines(sprintf("Processed %d. Result: %.3f", x, y), log_file)
   flush(log_file)
-
+  close(log_file)
   return(y)
 }
 
@@ -65,6 +65,6 @@ save(results, file=fpath_out)
 
 # Write "processing complete" to the log file.
 log_file <-file(fpath_log, open='a')
-writeLines(sprintf("Processing complete. Results written to %s", log_file), fpath_out)
+writeLines(sprintf("Processing complete. Results written to %s", fpath_out), log_file)
 flush(log_file)
 close(log_file)
