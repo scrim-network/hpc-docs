@@ -121,7 +121,34 @@ Write "processing complete" to the log file.
 
 ```R
 log_file <-file(fpath_log, open='a')
-writeLines(sprintf("Processing complete. Results written to %s", log_file), log_file)
+writeLines(sprintf("Processing complete. Results written to %s", fpath_out), log_file)
 flush(log_file)
 close(log_file)
 ```
+
+## Example PBS Script
+
+Here we walkthrough an example PBS script for submitting the above R script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script.
+
+Start the script with a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
+
+```Shell
+#!/bin/sh 
+```
+Add PBS directives for the computing resources required and other configuration parameters. PBS directives are specified as `#PBS [option]`. As an alternative, these or additional directives can also used as options to the `qsub` command that is used to submit the job.
+
+```Shell
+#PBS -l nodes=2:ppn=20
+#PBS -l walltime=00:05:00
+#PBS -l pmem=1GB
+#PBS -j oe
+#PBS -o [FILEPATH OF LOG FILE]
+#PBS -m abe
+#PBS -M [YOUR EMAIL ADDRESS]
+```
+
+* `PBS -l` lines (l = "limit") state that we are requesting 2 nodes with 20 processes per node (i.e. 40 total processes), a processing time of 5 minutes, and 1 gigabyte of memory for each process.
+* `#PBS -j oe` requests that the standard out and standard error streams of the PBS job script should be joined together and written to a single file.
+* `#PBS -j o` specifies the file path for the PBS script log file. Note: this is different than the log file specified in the R script. 
+* `#PBS -m abe` requests that an email be sent when the job begins (b), ends (e), or aborts (a) 
+* `#PBS -M` specifies the email address to which the status emails will be sent
