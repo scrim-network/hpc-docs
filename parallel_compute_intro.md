@@ -31,4 +31,6 @@ The [Message Passing Interface (MPI)](https://computing.llnl.gov/tutorials/mpi) 
 Because HPC systems like ICS-ACI serve many users, resource management software is required to effectively manage and utilize the computing resources. The [Portable Batch System (PBS)](https://en.wikipedia.org/wiki/Portable_Batch_System) is the most widely used HPC resource management software. ICS-ACI uses [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque), a version of PBS, in combination with the [Moab workload manager](http://www.adaptivecomputing.com/products/hpc-products/moab-hpc-basic-edition/) to manage and utilize the cluster's computing resources. For the purposes of this tutorial, we will refer to the TORQUE/MOAB software suite simply as "PBS". Users submit requests for computational resources to PBS via job scripts that specify the computing resources required (e.g. number of processes and nodes, memory, compute time, etc.) and the command for the parallel processing application to be executed. The user requests are placed on a queue and PBS automatically allocates resources for the different jobs. When resources become available for a particular job, PBS gives the job exclusive use of the compute resources requested and then executes the job.
 
 # Code Examples
-Add links to MPI-based R, Python and PBS code examples...
+
+* [R](https://github.com/scrim-network/hpc-docs/tree/master/examples/R)
+* [Python](https://github.com/scrim-network/hpc-docs/tree/master/examples/python)
