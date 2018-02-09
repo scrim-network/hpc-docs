@@ -1,5 +1,5 @@
 # MPI Example for R using the foreach looping contruct
-# See documentation at: https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi.md
+# See documentation at: https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi/foreach_mpi.md
 
 # Load libraries
 library(Rmpi)

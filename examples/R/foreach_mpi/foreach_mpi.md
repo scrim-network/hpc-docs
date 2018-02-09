@@ -173,7 +173,7 @@ Programs that use MPI must be executed with the [`mpiexec`](https://www.open-mpi
 
 * `-np` Specifies the number of processes. **Important: Typically, this should match the number of processes requested in the PBS directive. However, due to how MPI is used by the `foreach` looping contruct, `-np` needs to be set to 1 for this example**. Unlike a typical MPI use case, the number of processes spawned is controlled directly by the `nprocs` variable that we defined in the example R script. If `-np` is set to 40 by accident, a big mess will be created: 40 R processes will be kicked off and then each of these processes will spawn 39 processes resulting in a total of 1560 processes! 
 * `-machinefile` Specifies a file containing the list of nodes on which the processes should be run. PBS automatically determines the nodes that the job will run on and places the node hostnames in a file pointed to by the `$PBS_NODEFILE` environmental variable.
-* `Rscript foreach_mpi.R` The actual command for running the R script. `Rscript` is a standard command for executing an R script and `foreach_mpi` is the name of the script file.
+* `Rscript foreach_mpi.R` The actual command for running the R script. `Rscript` is a standard command for executing an R script and `foreach_mpi.R` is the name of the script file.
 
 The job can then be submited to a ICS-ACI queue using the qsub command:
 
