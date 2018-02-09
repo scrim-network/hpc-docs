@@ -37,7 +37,7 @@ install.packages(c('doParallel','foreach','snow'))
 ```
 
 ## Example R Script
-In this example, we have a simple function we want to individually apply to all numbers in a vector. The script applies the function to the numbers in parallel and then writes out the results as an RData file. This design can be used to parallize any [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel) workload.
+In this example, we have a simple function we want to individually apply to all numbers in a vector. The script applies the function to the numbers in parallel and then writes out the results as an RData file. This design can be used to parallize any [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel) workload. The full script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi/foreach_mpi.R). 
 
 Load the required libraries.
 
@@ -76,6 +76,7 @@ a_func <- function(x, fpath_log) {
   log_file <-file(fpath_log, open='a')
   writeLines(sprintf("Processed %d. Result: %.3f", x, y), log_file)
   flush(log_file)
+  close(log_file)
 
   return(y)
 }
@@ -121,16 +122,16 @@ Write "processing complete" to the log file.
 
 ```R
 log_file <-file(fpath_log, open='a')
-writeLines(sprintf("Processing complete. Results written to %s", fpath_out), log_file)
+writeLines(sprintf("Processing complete. Results written to %s", log_file), log_file)
 flush(log_file)
 close(log_file)
 ```
 
 ## Example PBS Script
 
-Here we walkthrough an example PBS script for submitting the above R script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script.
+Here we walkthrough an example PBS script for submitting the above R script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script. The fule script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi/pbs_foreach_mpi.sh).
 
-Start the script with a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
+At the top the script, insert a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
 
 ```Shell
 #!/bin/sh 
