@@ -1,38 +1,28 @@
-# Example of using foreach with MPI. Within a PBS job script on ACI, the script
-# needs to be executed using mpirun as follows:
-#
-# mpirun -np 1 -machinefile $PBS_NODEFILE Rscript foreach_mpi.R
-#
-# The one gotcha with this command is that the number of processes for mpirun
-# needs to be 1 (-np 1). Typically, the number of processes that the job actually uses
-# would be placed here. However, the foreach example here is different in that
-# Rmpi controls the initialization and farming out of the processes using MPI spawn.
-#
-# Required R packages
-# doParallel
-# foreach
-# Rmpi
-# snow
+# MPI Example for R using the foreach looping contruct
+# See documentation at: https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi.md
 
 # Load libraries
 library(Rmpi)
 library(doParallel)
 library(foreach)
 
-# File path for log file and output file
+# Set the output file paths for a log file and the RData results file.
 fpath_log <- "[FILE PATH TO LOG FILE]"
 fpath_out <- "[FILE PATH FOR RDATA FILE TO WRITE RESULTS]"
-# The number of processes. Should be one less than what is requested in the PBS
-# script, because the main process counts as a process
+# Specify the number of processes to use. This should be one less than what is
+# requested in the accompanying PBS script because we need to count the main process.
 nprocs <- 19
-# The underlying multiprocessing implementation. If running across nodes, use
-# MPI. If running on just a single node, PSOCK can be used
+
+# Specify the underlying multiprocessing implementation. In this case, we are
+# using MPI. If running on a single computer, "PSOCK" can also be used.
 mp_type = "MPI" # PSOCK or MPI
 
-# The main function that each process worker will execute
-# In this case, the function is simply adding a random number to the parameter
-# x and then sleeping for 5 seconds.
-a_func <- function(x) {
+# Define the function to be applied to each number. In this very simple example,
+# the function adds random noise to the number, sleeps for 5 seconds and then returns
+# the result. The function also writes out the result to a log file. We use a
+# log file instead of simple print commands, because print commands from the worker
+# processes will not show on standard out. The function takes both the number and log file path as input.
+a_func <- function(x, fpath_log) {
 
   y <- x + runif(1)
   Sys.sleep(5)
@@ -43,32 +33,38 @@ a_func <- function(x) {
   return(y)
 }
 
-# Initialize output log file. We use a log file instead of simple print statements
-# because print statements from within the process workers will not show on stdout
+# Initialize the output log file
 writeLines(c(""), fpath_log)
 
-# Initialize the process workers. Each worker will be initialized with the current
-# R environment in the main process.
+# Initialize the parallel worker processes. Be aware that each worker will be
+# initialized with the R environment of the main process. This can be useful when
+# there are certain global data structures for which each worker process needs
+# access. The data can be loaded into the memory of the main process and then when
+# the parallel worker processes are initialized, the data structures will be
+# automatically copied out to the memory associated with each worker process.
+# However, be cautious about memory issues. If you have a lot of data loaded in
+# the main process, it will be duplicated in each of the worker processes.
 cl <- parallel::makeCluster(nprocs, type=mp_type)
 doParallel::registerDoParallel(cl)
 
-# Loop through the workloads to be processed and send them to the workers. In this
-# case, all results will be gathered in a single "results" list object
+# Loop through the numbers to be processed using the foreach looping contruct.
+# The numbers will be sent to the workers and processed in parallel.
+# All results will be gathered in a single "results" list object.
 args_seq <- seq(100)
 results <- foreach::foreach(a_arg=args_seq) %dopar% {
 
-  a_func(a_arg)
+  a_func(a_arg, fpath_log)
 
 }
 
 # Stop the worker processes
 stopCluster(cl)
 
-# Save the results
+# Save the results to the output RData file.
 save(results, file=fpath_out)
 
-# Write process complete to log file
+# Write "processing complete" to the log file.
 log_file <-file(fpath_log, open='a')
-writeLines(sprintf("Processing complete. Results written to %s", log_file), log_file)
+writeLines(sprintf("Processing complete. Results written to %s", log_file), fpath_out)
 flush(log_file)
 close(log_file)
