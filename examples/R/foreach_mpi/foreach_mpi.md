@@ -129,9 +129,9 @@ close(log_file)
 
 ## Example PBS Script
 
-Here we walkthrough an example PBS script for submitting the above R script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script. The fule script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi/pbs_foreach_mpi.sh).
+Here we walkthrough an example PBS script for submitting the above R script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script. The full script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/R/foreach_mpi/pbs_foreach_mpi.sh).
 
-At the top the script, insert a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
+At the top of the script, insert a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
 
 ```Shell
 #!/bin/sh 
@@ -161,6 +161,7 @@ cd $PBS_O_WORKDIR
 ```
 
 Add a `modules` command to load the required MPI library.
+
 ```Shell
 module load gcc/5.3.1 openmpi/1.10.1
 ```
