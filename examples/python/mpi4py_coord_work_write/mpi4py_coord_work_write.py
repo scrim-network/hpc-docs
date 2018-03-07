@@ -6,7 +6,7 @@ Must be run using mpiexec or mpirun.
 '''
 
 from mpi4py import MPI
-import numpy as np
+import random
 import time
 
 TAG_DOWORK = 1
@@ -36,7 +36,7 @@ def proc_work():
             # Perform work task
             # Add random number to a_num and sleep for 5 seconds
 
-            y = a_num + np.random.rand()
+            y = a_num + random.randint(0,100)
             time.sleep(5)
 
             # Send result to writer
@@ -78,7 +78,7 @@ def proc_coord():
 
     cnt = 0
 
-    for a_num in np.arange(100):
+    for a_num in range(100):
 
         if cnt < nwrkers:
             dest = cnt + N_NON_WRKRS
