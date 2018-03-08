@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
 ## Example PBS Script
 
-Here we walk through an example PBS script for submitting the above Python script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the R script. The full script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/python/mpi4py_coord_work_write/pbs_mpi4py_coord_work_write.sh).
+Here we walk through an example PBS script for submitting the above Python script to the ICS-ACI batch queue. The script includes PBS directives that specify the computing resources required, commands for setting up the required shell environment, and the command for running the Python script. The full script can be found [here](https://github.com/scrim-network/hpc-docs/blob/master/examples/python/mpi4py_coord_work_write/pbs_mpi4py_coord_work_write.sh).
 
 At the top of the script, insert a system shell [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
 
