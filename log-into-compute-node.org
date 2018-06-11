@@ -1,3 +1,4 @@
+* Log into a compute node 
 To log into a node allocated to a running job, first identify its hostname, e.g. by using ~qstat -n~ (in the examples below replace ~gum184~ with your username):
 #+BEGIN_EXAMPLE
 [gum184@aci-lgn-004 ~]$ qstat -u gum184 -n
@@ -6,30 +7,36 @@ torque01.util.production.int.aci.ics.psu.edu:
                                                                                   Req'd       Req'd       Elap
 Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
 ----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
-6278946.torque01.util.  gum184      open     stress.pbs        15098     1      4       2gb  00:10:00 R  00:00:00
+6278946.torque01.util.  gum184      open     test.pbs          15098     1      4       2gb  00:10:00 R  00:00:00
    comp-bc-0096/0,4-6
 #+END_EXAMPLE
 
-Then you can ssh into the compute node ~comp-bc-0096~ with:
+In this case it's ~comp-bc-0096~. Use ssh to log into the node:
 #+BEGIN_EXAMPLE
 [gum184@aci-lgn-004 ~]$ ssh -oStrictHostKeyChecking=no comp-bc-0096
 Warning: Permanently added 'comp-bc-0096' (RSA) to the list of known hosts.
 [gum184@comp-bc-0096 ~]$
 #+END_EXAMPLE
 
-From here you can use ~top -U gum184~ to display resources usages associated with your processes, or get a tail of the output with:
+After logging in, you can display the resources used by your processes:
+#+BEGIN_EXAMPLE
+[gum184@comp-bc-0096 ~]$ top -U gum184
+
+[...]
+#+END_EXAMPLE
+
+or follow the tail of the output of your job (using the correct Job ID):
 #+BEGIN_EXAMPLE
 [gum184@comp-bc-0096 ~]$ tail -f /var/spool/torque/spool/6278946*
 
 [...]
 #+END_EXAMPLE
-
+** Automation example
 If your jobs have unique names and span only one node each, you might want to try out the bash functions below (e.g. by adding them to your =~/.bashrc=), which automate the steps above:
 #+BEGIN_SRC shell
 qtop () 
 { 
     COMP_HOST="$(qstat -f | egrep -A20 "Job_Name = .*$1" | grep -A10 "job_state = R" | grep exec_host | cut -f7 -d' ' | cut -f1 -d/)";
-    BID="$(qstat -f | egrep -B1 -A20 "Job_Name = .*$1" | grep -B10 "job_state = R" | grep 'Job Id:' | cut -f3 -d' ' | cut -f1 -d.)";
     [ -z "$COMP_HOST" ] || ssh -oStrictHostKeyChecking=no "$COMP_HOST" "top -U gum184 -b"
 }
 
@@ -41,8 +48,8 @@ qtail ()
 }
 #+END_SRC
 
-You would then use them followed by a substring of your job name.
+You would then use them followed by a uniquely identifying substring of your job name.
 #+BEGIN_EXAMPLE
-[gum184@aci-lgn-004 ~]$ qtop stress
-[gum184@aci-lgn-004 ~]$ qtail stress
+[gum184@aci-lgn-004 ~]$ qtop test
+[gum184@aci-lgn-004 ~]$ qtail test
 #+END_EXAMPLE
