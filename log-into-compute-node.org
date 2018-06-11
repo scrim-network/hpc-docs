@@ -48,7 +48,7 @@ qtail ()
 }
 #+END_SRC
 
-You would then use them followed by a uniquely identifying substring of your job name.
+You would then use them directly from a login node, followed by a uniquely identifying substring of your job name.
 #+BEGIN_EXAMPLE
 [gum184@aci-lgn-004 ~]$ qtop test
 [gum184@aci-lgn-004 ~]$ qtail test
